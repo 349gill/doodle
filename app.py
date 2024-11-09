@@ -1,17 +1,17 @@
 # app.py
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-mport MySQL
+from flask import MySQL
 import hashlib
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = 'your-railway-mysql-host'
-app.config['MYSQL_USER'] = 'your-railway-mysql-user'
-app.config['MYSQL_PASSWORD'] = 'your-railway-mysql-password'
-app.config['MYSQL_DB'] = 'scheduler_db'
-app.secret_key = 'your-secret-key'
-
-mysql = MySQL(app)
+# app.config['MYSQL_HOST'] = 'your-railway-mysql-host'
+# app.config['MYSQL_USER'] = 'your-railway-mysql-user'
+# app.config['MYSQL_PASSWORD'] = 'your-railway-mysql-password'
+# app.config['MYSQL_DB'] = 'scheduler_db'
+# app.secret_key = 'your-secret-key'
+#
+# mysql = MySQL(app)
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -44,7 +44,7 @@ def login():
             
         cur.close()
         
-    return render_template('login.html')
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
