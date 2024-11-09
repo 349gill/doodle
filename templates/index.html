@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doodle - Login</title>
-    <!-- Importing the main font from Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
         @keyframes fadeInUp {
             0% {
@@ -19,7 +15,7 @@
         }
 
         body {
-            background-image: url('paper-texture.jpg'); /* Ensure this image path is correct */
+            background-image: url('/static/paper-texture.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -28,7 +24,7 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Fredoka One', sans-serif;
+            font-family: 'Shadows Into Light', cursive;
             color: #333; /* Dark text color for readability */
             overflow: hidden;
         }
@@ -36,7 +32,7 @@
             position: absolute;
             width: 200px;
             padding: 20px;
-            color: #333;
+            color: #333; /* Dark text color for readability */
             font-size: 16px;
             text-align: center;
             line-height: 1.5;
@@ -52,7 +48,7 @@
             transform: translateY(-50%);
         }
         .main-content {
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.8); /* Lighter background for contrast */
             padding: 30px;
             border-radius: 15px;
             width: 300px;
@@ -71,7 +67,6 @@
             border: none;
             border-bottom: 1px solid #ccc;
             background: transparent;
-            font-family: 'Fredoka One', sans-serif;
         }
         button {
             width: 100%;
@@ -82,7 +77,6 @@
             border-radius: 5px;
             cursor: pointer;
             margin-top: 20px;
-            font-family: 'Fredoka One', sans-serif;
         }
         .tagline {
             color: #0066FF;
@@ -96,9 +90,8 @@
             margin: 20px 0;
         }
         .quote {
-            font-family: Georgia, serif; /* Simple serif font for quotes */
-            font-size: 18px;
-            font-style: italic;
+            font-size: 24px; /* Increased font size for quotes */
+            font-weight: bold; /* Make quotes bolder */
             line-height: 1.6;
             padding-left: 10px;
             padding-right: 10px;
@@ -117,6 +110,7 @@
         .feature-box:nth-child(2) { animation-delay: 0.5s; }
         .feature-box:nth-child(3) { animation-delay: 0.7s; }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="side-content left-side">
@@ -135,7 +129,8 @@
     <div class="main-content">
         <div class="logo">Doodle</div>
         <div class="login-box">
-            <form method="POST" action="your_action_url">
+
+            <form method="POST">
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit">Sign in</button>
