@@ -1,26 +1,149 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="utf-8">
-      <meta name="description" content="alphasec">
-      <meta name="author" content="alphasec">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>alphasec</title>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-      <link rel="stylesheet" href="static/css/styles.css">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:500&display=swap">
-      <link rel="icon" href="static/favicon.ico" type="image/x-icon">
-  </head>
-  <body>
-    <div class="row">
-      <h1 class="h1">alphasec</h1>
+<head>
+    <title>Doodle - Login</title>
+    <style>
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body {
+            background-image: url('paper-texture.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Shadows Into Light', cursive;
+            color: #333; /* Dark text color for readability */
+            overflow: hidden;
+        }
+        .side-content {
+            position: absolute;
+            width: 200px;
+            padding: 20px;
+            color: #333; /* Dark text color for readability */
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .left-side {
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .right-side {
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .main-content {
+            background-color: rgba(255, 255, 255, 0.8); /* Lighter background for contrast */
+            padding: 30px;
+            border-radius: 15px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            color: #0066FF;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            background: transparent;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0066FF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .tagline {
+            color: #0066FF;
+            margin-top: 30px;
+        }
+        .flash-messages {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .feature-list, .quote {
+            margin: 20px 0;
+        }
+        .quote {
+            font-size: 24px; /* Increased font size for quotes */
+            font-weight: bold; /* Make quotes bolder */
+            line-height: 1.6;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+        .feature-box {
+            background-color: #0066FF;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards;
+        }
+        .feature-box:nth-child(1) { animation-delay: 0.3s; }
+        .feature-box:nth-child(2) { animation-delay: 0.5s; }
+        .feature-box:nth-child(3) { animation-delay: 0.7s; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="side-content left-side">
+        <div class="quote">
+            <p>“The secret of getting ahead is getting started.”</p>
+            <p>– Mark Twain</p>
+        </div>
+        <div class="feature-list">
+            <h3>Features:</h3>
+            <div class="feature-box">Plan tasks</div>
+            <div class="feature-box">Stay organized</div>
+            <div class="feature-box">Get reminders</div>
+        </div>
     </div>
-    <div class="row">
-      <div>
-      </div>
+
+    <div class="main-content">
+        <div class="logo">Doodle</div>
+        <div class="login-box">
+
+            <form method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Sign in</button>
+            </form>
+        </div>
+        <div class="tagline">Schedule tasks efficiently.</div>
     </div>
-    <div class="row">
-      <span class="text-muted small">alphasec © 2024. All rights reserved.</span>
+
+    <div class="side-content right-side">
+        <div class="quote">
+            <p>“Don't wait for the perfect moment, take the moment and make it perfect.”</p>
+            <p>– Aryn Kyle</p>
+        </div>
     </div>
-  </body>
+</body>
 </html>
