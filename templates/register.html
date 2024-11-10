@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doodle - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="logo">Doodle</div>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="login-box">
+                <form method="POST" action="{{ url_for('register') }}">
+                    <input type="text" name="username" placeholder="Choose Username" required>
+                    <input type="password" name="password" placeholder="Choose Password" required>
+                    <button type="submit">Register</button>
+                </form>
+                <p class="register-link">
+                    Already have an account? <a href="{{ url_for('index') }}">Login here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
