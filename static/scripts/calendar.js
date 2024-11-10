@@ -12,13 +12,13 @@ document.addEventListener('DOMContentLoaded', function() {
         eventClick: function(info) {
             showTaskPopup(info.event);
         },
-        events: '/api/tasks',  // This loads the tasks from your backend
+        events: '/api/tasks',
         eventDataTransform: function(task) {
             return {
                 id: task.id,
                 title: task.title,
-                start: task.start,  // start time of the task
-                end: task.end,      // end time of the task
+                start: task.start,
+                end: task.end,
                 extendedProps: {
                     priority: task.extendedProps.priority,
                     duration: task.extendedProps.duration,
@@ -29,8 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     calendar.render();
-
-    // Function to show the task popup for new tasks
     window.addTaskButton = function() {
         currentTaskId = null;
         document.querySelector('.task-popup h3').textContent = 'Add Task';
@@ -43,13 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
         showPopup();
     };
 
-    // Function to show the task popup for existing tasks
     function showTaskPopup(event) {
         currentTaskId = event.id;
         document.querySelector('.task-popup h3').textContent = 'Edit Task';
         document.querySelector('.remove-btn').style.display = 'block';
         document.getElementById('task-name').value = event.title;
-        document.getElementById('task-deadline').value = moment(event.end).format('YYYY-MM-DDTHH:mm');
+        document.getElementById('task-deadline').value = moment(event.deadline).format('YYYY-MM-DDTHH:mm');
         document.getElementById('task-priority').value = event.extendedProps.priority;
         document.getElementById('task-duration').value = event.extendedProps.duration;
         document.getElementById('task-details').value = event.extendedProps.details || '';
@@ -98,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             await response.json();
-            calendar.refetchEvents(); // Refresh the calendar
+            calendar.refetchEvents();
             closeTaskPopup();
         } catch (error) {
             console.error('Error:', error);
@@ -119,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(errorData.error || 'Failed to delete task');
             }
 
-            calendar.refetchEvents(); // Refresh the calendar
+            calendar.refetchEvents();
             closeTaskPopup();
         } catch (error) {
             console.error('Error:', error);
@@ -127,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Close popup when clicking overlay
     document.querySelector('.popup-overlay').addEventListener('click', function(e) {
         if (e.target === this) {
             closeTaskPopup();
