@@ -11,8 +11,7 @@ from scheduler import MultilevelQueue
 scheduler = MultilevelQueue()
 
 app = Flask(__name__)
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:LeReZjBFlNIWHjKXeankgAcOcKzTFyGR@junction.proxy.rlwy.net:43241/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:LeReZjBFlNIWHjKXeankgAcOcKzTFyGR@junction.proxy.rlwy.net:43241/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 db = SQLAlchemy(app)
@@ -55,6 +54,7 @@ class Task(db.Model):
                 'duration': self.duration
             }
         }
+    
 @app.route('/')
 def index():
     if 'user_id' in session:
