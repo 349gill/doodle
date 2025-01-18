@@ -6,6 +6,7 @@
     <title>doodle</title>
     <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet">
+    <link rel="icon" href="../static/icon.png">
 
     <style>
         body {
@@ -54,7 +55,6 @@
             background-color: #0066FF;
             color: white;
         }
-        /* Modal Styles */
         .task-popup {
             display: none;
             position: fixed;
@@ -116,7 +116,7 @@
         <h3>Add Task</h3>
         <input type="text" id="task-name" placeholder="Task Name" required>
         <input type="datetime-local" id="task-deadline" required>
-        <input type="number" id="task-priority" placeholder="Priority (1-10)" min="1" max="10" required>
+        <input type="number" id="task-priority" placeholder="Priority (0-9)" min="0" max="9" required>
         <input type="number" id="task-duration" placeholder="Duration (hours)" required>
         <textarea id="task-details" placeholder="Task Details" rows="3"></textarea>
         <button onclick="saveTask()">Save Task</button>
@@ -131,7 +131,8 @@
     <!-- External JS File -->
     <script src="../static/scripts/calendar.js"></script>
 
-    <div style="margin: 20px; font-size: 14px; text-align: center;">
+    <div style="margin: 20px; font-size: 14px; text-align: center; display: flex; justify-content: center; align-items: center;">
+        <img src="{{ url_for('static', filename='github-mark.png') }}" style="height: 20px; width: 20px; margin-right: 10px;">
         <a href="https://github.com/349gill/doodle" target="_blank" style="color: #007bff; text-decoration: none;">Github</a>
     </div>
 </body>

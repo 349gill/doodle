@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>doodle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="../static/icon.png">
 </head>
 <body>
     <div class="container" style="margin: 0; padding: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
@@ -28,7 +29,8 @@
                 <p class="register-link">
                     Already have an account? <a href="{{ url_for('index') }}">Login here</a>
                 </p>
-                <div style="margin-top: 20px; font-size: 14px; text-align: center;">
+                <div style="margin-top: 20px; font-size: 14px; text-align: center; display: flex; justify-content: center; align-items: center;">
+                    <img src="{{ url_for('static', filename='github-mark.png') }}" style="height: 20px; width: 20px; margin-right: 10px;">
                     <a href="https://github.com/349gill/doodle" target="_blank" style="color: #007bff; text-decoration: none;">Github</a>
                 </div>
             </div>
