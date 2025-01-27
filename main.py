@@ -1,3 +1,4 @@
+import sys
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,13 +7,10 @@ from datetime import datetime, timedelta
 import os
 import logging
 
-from scheduler import MultilevelQueue
-
-scheduler = MultilevelQueue()
+from scheduler import MultiLevelQueueScheduler, SchedulerTask
 
 app = Flask(__name__)
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:LeReZjBFlNIWHjKXeankgAcOcKzTFyGR@junction.proxy.rlwy.net:43241/railway'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:LeReZjBFlNIWHjKXeankgAcOcKzTFyGR@junction.proxy.rlwy.net:43241/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 db = SQLAlchemy(app)
@@ -55,6 +53,7 @@ class Task(db.Model):
                 'duration': self.duration
             }
         }
+    
 @app.route('/')
 def index():
     if 'user_id' in session:
@@ -121,8 +120,6 @@ def calendar():
     user = User.query.get_or_404(session['user_id'])
     return render_template('calendar.html', username=user.username)
 
-
-# API Routes
 @app.route('/api/tasks', methods=['GET'])
 def get_tasks():
     if 'user_id' not in session:
@@ -130,7 +127,6 @@ def get_tasks():
 
     tasks = Task.query.filter_by(user_id=session['user_id']).all()
     return jsonify([task.to_dict() for task in tasks])
-
 
 @app.route('/api/tasks', methods=['POST'])
 def create_task():
@@ -141,68 +137,108 @@ def create_task():
         data = request.json
         name = data['name']
         priority = int(data['priority'])
-        due_date = datetime.fromisoformat(data['deadline'])
-        duration = float(data['duration'])
+        burst_time = float(data['burst_time'])
+        deadline_str = data['deadline']
+        deadline = datetime.fromisoformat(deadline_str).replace(tzinfo=None)
 
-        scheduler.add_task(name=name, priority=priority, due_date=due_date, duration=duration)
+        new_task = Task(
+            name=name,
+            priority=priority,
+            duration=burst_time,
+            deadline=deadline,
+            user_id=session['user_id']
+        )
+        db.session.add(new_task)
+        db.session.commit()
 
-        scheduled_tasks = scheduler.execute_tasks()
 
-        Task.query.filter_by(user_id=session['user_id']).delete()
+        tasks = Task.query.filter_by(user_id=session['user_id']).all()
 
-        for task in scheduled_tasks[0]:
-            db_task = Task(
-                id=task.id,
-                name=task.name,
-                priority=task.priority,
-                duration=task.duration,
-                start_time=task.arrival_time,
-                end_time=task.due_date,
-                deadline=task.due_date,
-                user_id=session['user_id']
+        if not tasks:
+            print("No tasks found for the user.")
+
+        scheduler = MultiLevelQueueScheduler(10)
+
+        for task in tasks:
+            print(f"Task retrieved: ID={task.id}, Priority={task.priority}, Deadline={task.deadline}")
+
+            scheduler_task = SchedulerTask(
+                task.id,
+                task.name,
+                task.priority,
+                task.duration,
+                int(round(task.deadline.timestamp()))
             )
-            db.session.add(db_task)
+            scheduler.add_task(scheduler_task)
+
+        scheduled_tasks = scheduler.execute()
+
+        current_time = datetime.utcnow()
+        for scheduled_task in scheduled_tasks:
+            db_task = Task.query.filter_by(id=scheduled_task.id).first()
+            if db_task:
+                db_task.start_time = current_time
+                db_task.end_time = current_time + timedelta(hours=scheduled_task.burst_time)
+                current_time = db_task.end_time
 
         db.session.commit()
 
         return jsonify([t.to_dict() for t in Task.query.filter_by(user_id=session['user_id']).all()])
 
     except Exception as e:
+        print(f"Error in create_task: {str(e)}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
-
-
-logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/api/tasks/<int:task_id>', methods=['PUT'])
 def update_task(task_id):
     if 'user_id' not in session:
         return jsonify({'error': 'Unauthorized'}), 401
 
-    task = Task.query.filter_by(id=task_id, user_id=session['user_id']).first()
-    if not task:
-        return jsonify({'error': 'Task not found'}), 404
-
     try:
-        data = request.json
+        data = request.get_json()
+        task = Task.query.filter_by(id=task_id, user_id=session['user_id']).first()
+
+        if not task:
+            return jsonify({'error': 'Task not found'}), 404
+
         task.name = data.get('name', task.name)
-        task.priority = int(data.get('priority', task.priority))
+        task.deadline = datetime.strptime(data['deadline'], '%Y-%m-%dT%H:%M') if 'deadline' in data else task.deadline
+        task.priority = data.get('priority', task.priority)
+        task.duration = data.get('duration', task.duration)
         task.details = data.get('details', task.details)
 
-        if 'duration' in data:
-            task.duration = float(data.get('duration', task.duration))
-            task.start_time = task.deadline - timedelta(hours=task.duration)
+        db.session.commit()
 
-        if 'deadline' in data:
-            task.start_time = task.start_time + (data.get('deadline', task.deadline) - task.end_date)
-            task.end_time = data.get('deadline', task.deadline)
+        tasks = Task.query.filter_by(user_id=session['user_id']).all()
+        scheduler = MultiLevelQueueScheduler(10)
+
+        for task in tasks:
+            scheduler_task = SchedulerTask(
+                task.id,
+                task.name,
+                task.priority,
+                task.duration,
+                int(round(task.deadline.timestamp()))
+            )
+            scheduler.add_task(scheduler_task)
+
+        scheduled_tasks = scheduler.execute()
+        current_time = datetime.utcnow()
+        for scheduled_task in scheduled_tasks:
+            db_task = Task.query.filter_by(id=scheduled_task.id).first()
+            if db_task:
+                db_task.start_time = current_time
+                db_task.end_time = current_time + timedelta(hours=scheduled_task.burst_time)
+                current_time = db_task.end_time
 
         db.session.commit()
-        return jsonify(task.to_dict())
+
+        return jsonify([t.to_dict() for t in Task.query.filter_by(user_id=session['user_id']).all()])
 
     except Exception as e:
+        print(f"Error in update_task: {str(e)}")
         db.session.rollback()
-        logging.error(f"Exception occurred: {e}")
         return jsonify({'error': str(e)}), 400
 
 @app.route('/api/tasks/<int:task_id>', methods=['DELETE'])
@@ -210,21 +246,47 @@ def delete_task(task_id):
     if 'user_id' not in session:
         return jsonify({'error': 'Unauthorized'}), 401
 
-    task = Task.query.filter_by(id=task_id, user_id=session['user_id']).first()
-    if not task: return jsonify({'error': 'Task not found'}), 404
-
     try:
-        task_removed = scheduler.remove_task(task_id)
+        task = Task.query.filter_by(id=task_id, user_id=session['user_id']).first()
+
+        if not task:
+            return jsonify({'error': 'Task not found'}), 404
 
         db.session.delete(task)
         db.session.commit()
 
-        if task_removed: return jsonify({'message': 'Task deleted successfully from both the queue and database'})
-        else: return jsonify({'message': 'Task deleted from database, but it was not found in the queue'}), 200
+        tasks = Task.query.filter_by(user_id=session['user_id']).all()
+        scheduler = MultiLevelQueueScheduler(10)
+
+        for task in tasks:
+            scheduler_task = SchedulerTask(
+                task.id,
+                task.name,
+                task.priority,
+                task.duration,
+                int(round(task.deadline.timestamp()))
+            )
+            scheduler.add_task(scheduler_task)
+
+        scheduled_tasks = scheduler.execute()
+
+        current_time = datetime.utcnow()
+        for scheduled_task in scheduled_tasks:
+            db_task = Task.query.filter_by(id=scheduled_task.id).first()
+            if db_task:
+                db_task.start_time = current_time
+                db_task.end_time = current_time + timedelta(hours=scheduled_task.burst_time)
+                current_time = db_task.end_time
+
+        db.session.commit()
+
+        return jsonify([t.to_dict() for t in Task.query.filter_by(user_id=session['user_id']).all()])
 
     except Exception as e:
+        print(f"Error in delete_task: {str(e)}")  # Debug logging
         db.session.rollback()
         return jsonify({'error': str(e)}), 400
+
 
 @app.errorhandler(404)
 def not_found_error(error):

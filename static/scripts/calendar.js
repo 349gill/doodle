@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             name: document.getElementById('task-name').value,
             deadline: document.getElementById('task-deadline').value,
             priority: parseInt(document.getElementById('task-priority').value),
-            duration: parseFloat(document.getElementById('task-duration').value),
+            burst_time: parseFloat(document.getElementById('task-duration').value),
             details: document.getElementById('task-details').value
         };
 
@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             await response.json();
             calendar.refetchEvents();
             closeTaskPopup();
+            
         } catch (error) {
             console.error('Error:', error);
             alert(error.message);

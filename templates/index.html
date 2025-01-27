@@ -3,27 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doodle - Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <title>doodle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="../static/icon.png">
 </head>
 <body>
-    <div class="container">
-        <div class="side-content">
-            <div class="quote">
-                <p>"The secret of getting ahead is getting started."</p>
-                <p>– Mark Twain</p>
-            </div>
-            <div class="feature-list">
-                <h3>Features:</h3>
-                <div class="feature-box">Plan tasks</div>
-                <div class="feature-box">Stay organized</div>
-                <div class="feature-box">Get reminders</div>
-            </div>
-        </div>
-
+    <div class="container" style="margin: 0; padding: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
         <div class="main-content">
-            <div class="logo">Doodle</div>
+            <div class="logo">doodle</div>
             {% with messages = get_flashed_messages() %}
                 {% if messages %}
                     <div class="flash-messages">
@@ -43,13 +30,9 @@
                     Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
                 </p>
             </div>
-            <div class="tagline">Schedule tasks efficiently.</div>
-        </div>
-
-        <div class="side-content">
-            <div class="quote">
-                <p>"Don't wait for the perfect moment, take the moment and make it perfect."</p>
-                <p>– Aryn Kyle</p>
+            <div style="margin-top: 20px; font-size: 14px; text-align: center; display: flex; justify-content: center; align-items: center;">
+                <img src="{{ url_for('static', filename='github-mark.png') }}" style="height: 20px; width: 20px; margin-right: 10px;">
+                <a href="https://github.com/349gill/doodle" target="_blank" style="color: #007bff; text-decoration: none;">Github</a>
             </div>
         </div>
     </div>
