@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>doodle</title>
-    <!-- FullCalendar CSS -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.css" rel="stylesheet">
     <link rel="icon" href="../static/icon.png">
 
@@ -29,20 +28,16 @@
         }
         .calendar-container {
             width: 90%;
-            max-width: 1000px;
-            margin-top: 20px;
             background-color: #fff;
-            padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        /* Make event boxes smaller */
         .fc-daygrid-day-frame {
             padding: 5px;
-            height: 80px; /* Adjust height of the day boxes */
-            width: 80px;  /* Adjust width of the day boxes */
+            height: 80px;
+            width: 80px;
         }
         .fc-daygrid-day-top {
-            font-size: 12px; /* Smaller date font size */
+            font-size: 12px;
         }
         .fc-event {
             background-color: #0066FF;
@@ -86,7 +81,7 @@
         }
         .remove-btn {
             background-color: red;
-            margin-top: 10px;  /* Add margin for space between buttons */
+            margin-top: 10px;
         }
         .popup-overlay {
             display: none;
@@ -101,16 +96,16 @@
     </style>
 </head>
 <body>
+    
+    <div style="flex: 1; display: flex; flex-direction: row; align-items: center;">
+        <div id="current-utc-time" style="text-align: center; margin: 20px; font-size: 16px;"></div>
+        <button onclick="addTaskButton()" style="margin: 20px; background-color: #0066FF; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Add Task</button>
+    </div>
 
-    <!-- Add Task Button -->
-    <button onclick="addTaskButton()" style="margin: 20px; background-color: #0066FF; color: white; padding: 10px 20px; border: none; border-radius: 5px;">Add Task</button>
-
-    <!-- Calendar Container -->
     <div class="calendar-container">
         <div id="calendar"></div>
     </div>
 
-    <!-- Task Pop-up Modal -->
     <div class="popup-overlay" onclick="closeTaskPopup()"></div>
     <div class="task-popup">
         <h3>Add Task</h3>
@@ -120,15 +115,21 @@
         <input type="number" id="task-duration" placeholder="Duration (hours)" required>
         <textarea id="task-details" placeholder="Task Details" rows="3"></textarea>
         <button onclick="saveTask()">Save Task</button>
-        <!-- Delete button is only shown when editing an existing task -->
         <button class="remove-btn" onclick="removeTask()" style="display: none;">Delete Task</button>
     </div>
 
-    <!-- FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.2/main.min.js"></script>
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const utcString = now.toUTCString();
+            document.getElementById('current-utc-time').innerText = `Current UTC Time: ${utcString}`;
+        }
 
-    <!-- External JS File -->
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
     <script src="../static/scripts/calendar.js"></script>
 
     <div style="margin: 20px; font-size: 14px; text-align: center; display: flex; justify-content: center; align-items: center;">

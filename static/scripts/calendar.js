@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
             await response.json();
             calendar.refetchEvents();
             closeTaskPopup();
+            
         } catch (error) {
             console.error('Error:', error);
             alert(error.message);
